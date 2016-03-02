@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Salary Calculator</title>
+	<style type="text/css">
+		.field{
+			margin-bottom: 10px;
+		}
+		label{
+			display: block;
+		}
+		#divResult{
+			color : red;
+			font-size: 20pt;
+		}
+	</style>
+	<script src="jquery-1.12.1.js"></script>
+	<script src="angular.js"></script>
+	<script src="view-utils.js"></script>
+	<script type="text/javascript">
+	Object.prototype.toInt = function(){
+		return parseInt(this,10);
+	}
+
+	angular.injector(["ng"]).invoke(function($rootScope){
+		window.scope = $rootScope;
+	});
+
+	//Model
+	function MathCalculator(){
+		this.number1 = 0;
+		this.number2 = 0;
+		this.result = 0;
+	}
+	MathCalculator.prototype.add = function(){
+		this.result = this.number1 + this.number2;
+	};
+	MathCalculator.prototype.subtract = function(){
+		this.result = this.number1 - this.number2;
+	};
+	MathCalculator.prototype.multiply = function(){
+		this.result = this.number1 * this.number2;
+	};
+	MathCalculator.prototype.divide = function(){
+		this.result = this.number1 / this.number2;
+	};
+
+	//Assign the model to the scope
+	window.calculator = scope.calculator = new MathCalculator();
+
+	//View
+	
+	</script>
+</head>
+<body>
+	<h1>Salary Calculator</h1>
+	<div class="content">
+		<input type="text" app-model="calculator.number1">
+		<input type="text" app-model="calculator.number2">
+		<input type="button" value="Add" app-click="calculator.add()">
+		<input type="button" value="Subtract" app-click="calculator.subtract()">
+		<input type="button" value="Divide" app-click="calculator.divide()">
+		<input type="button" value="Multiply" app-click="calculator.multiply()">
+		<div app-bind="calculator.result"></div>
+	</div>
+</body>
+</html>

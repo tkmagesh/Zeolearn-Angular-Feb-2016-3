@@ -17,6 +17,7 @@
 	</style>
 	<script src="jquery-1.12.1.js"></script>
 	<script src="angular.js"></script>
+	<script src="view-utils.js"></script>
 	<script type="text/javascript">
 	Object.prototype.toInt = function(){
 		return parseInt(this,10);
@@ -38,72 +39,15 @@
 		var subTotal =this.basic + this.hra + this.da;
 		this.salary = subTotal * ((100-this.tax)/100);
 	}
+	SalaryCalculator.prototype.reset = function(){
+		this.basic = this.hra = this.da = this.tax = this.salary = 0;
+	};
 
 	//Assign the model to the scope
 	window.calculator = scope.calculator = new SalaryCalculator();
 
 	//View
-	$(document).ready(function(){
-		
-		/*Config file
-			txtBasic - calculator.basic
-			txtHra - calculator.hra
-		*/
-
-		//Reacting to User Actions
-		$("#txtBasic").change(function(){
-			scope.$apply(function(){
-				calculator.basic = $("#txtBasic").val().toInt();
-			});
-		});
-		scope.$watch('calculator.basic', function(newValue, oldValue){
-			$("#txtBasic").val(newValue);
-		});
-
-		$("#txtHra").change(function(){
-			scope.$apply(function(){
-				calculator.hra = $("#txtHra").val().toInt();
-			});
-		});
-		scope.$watch('calculator.hra', function(newValue, oldValue){
-			$("#txtHra").val(newValue);
-		});
-
-
-		$("#txtDa").change(function(){
-			scope.$apply(function(){
-				calculator.da = $("#txtDa").val().toInt();
-			});
-		});
-		scope.$watch('calculator.da', function(newValue, oldValue){
-			$("#txtDa").val(newValue);
-		});
-
-		$("#rangeTax").change(function(){
-			scope.$apply(function(){
-				calculator.tax = $("#rangeTax").val().toInt();
-			});
-		});
-		scope.$watch('calculator.tax', function(newValue, oldValue){
-			$("#rangeTax").val(newValue);
-		});
-
-
-		$("#btnCalculate").click(function(){
-			scope.$apply(function(){
-				calculator.calculate();
-			});
-		});
-
-		
-		//Reacting to Model changes
-		scope.$watch('calculator.salary', function(newValue, oldValue){
-			$("#divResult").html('$' + newValue);
-		});
-		scope.$watch('calculator.tax', function(newValue, oldValue){
-			$("#spanTax").html(newValue);
-		});
-	});
+	
 	</script>
 </head>
 <body>
@@ -124,13 +68,14 @@
 		<div class="field">
 			<label for="">Tax :</label>
 			<input type="range" name="" id="rangeTax" min="0" max="30" app-model="calculator.tax">
-			<span id="spanTax">[Tax%]</span>
+			<span id="spanTax" app-bind="calculator.tax">[Tax%]</span>
 		</div>
 		<div class="field">
-			<input type="button" value="Calculate" id="btnCalculate">
+			<input type="button" value="Calculate" id="btnCalculate" app-click="calculator.calculate()">
+			<input type="button" value="Reset" app-click="calculator.reset()">
 		</div>
 		<div class="field">
-			<div id="divResult">[Salary]</div>
+			<div id="divResult" app-bind="calculator.salary">[Salary]</div>
 		</div>
 	</div>
 </body>
