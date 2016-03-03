@@ -46,7 +46,7 @@
 
 	//Assign the model to the scope
 	angular
-		.module("ng")
+		.module("myApp", [])
 		.run(function($rootScope){
 			$rootScope.calculator = new MathCalculator();
 		});
@@ -55,7 +55,7 @@
 	
 	</script>
 </head>
-<body ng-app>
+<body ng-app="myApp">
 	<h1>Salary Calculator</h1>
 	<div class="content">
 		<input type="number" ng-model="calculator.number1">

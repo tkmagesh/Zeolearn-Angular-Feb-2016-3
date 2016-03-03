@@ -41,30 +41,25 @@
 		this.basic = this.hra = this.da = this.tax = this.salary = 0;
 	};
 
-	//Assign the model to the scope
-	//$(function(){
-	/*angular.element(document).ready(function(){
-		angular.injector(["ng"]).invoke(function($rootScope, $compile){
-			window.scope = $rootScope;
-			window.calculator = scope.calculator = new SalaryCalculator();
-			$compile(document.body)(scope);
-			scope.$apply();
-		});
-	})*/
 	
 	angular
-		.module("ng")
+		.module("myApp", [])
+		.controller('myController', function($scope){
+			$scope.name = 'Zeolearn - Calculator';
+			$scope.calculator = new SalaryCalculator();
+		})
 		.run(function($rootScope){
-			$rootScope.calculator = new SalaryCalculator();
+			$rootScope.name = 'Zeolearn';
 		});
 
 	//View
 	
 	</script>
 </head>
-<body ng-app>
+<body ng-app = "myApp">
 	<h1>Salary Calculator</h1>
-	<div class="content">
+	<div class="content" ng-controller="myController">
+		<h3 ng-bind="name"></h3>
 		<div class="field">
 			<label>Basic :</label>
 			<input type="number" name="" id="txtBasic" ng-model="calculator.basic">

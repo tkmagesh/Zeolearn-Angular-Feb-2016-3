@@ -1,0 +1,27 @@
+Angular Building Blocks
+========================
+
+1. Module
+	- logical container for all the application components
+	- Dependency Injection 
+
+Building Blocks for UI-related Concerns
+
+2. Scope
+3. Directive
+	- Connections HTML DOM with scope
+	- Enhances the capabilities of HTML
+4. Filter
+	- Transforms the data for presentation needs
+5. Controller
+	- configure the scope object
+
+Building Blocks for non-ui related concerns
+
+6. Factory
+7. Value
+8. Service
+9. Constant
+10. Provider
+
+
