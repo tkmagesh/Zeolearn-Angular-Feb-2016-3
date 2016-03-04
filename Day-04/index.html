@@ -10,7 +10,7 @@
 		Use Cases
 		1. List the bugs - done
 		2. Add a new bug - done
-		3. Togggle the 'closed' status of a bug
+		3. Togggle the 'closed' status of a bug - done
 		4. Remove closed bugs
 		5. Display Statistics
 		6. Search for bugs
@@ -29,13 +29,17 @@
 		});
 		bugTrackerApp.controller("bugsController", function($scope){
 			$scope.bugs = [
-				"Validation messages are not displayed",
-				"Server communication failure",
-				"User authentication is wrong"
+				{ name : "Validation messages are not displayed", isClosed : false},
+				{ name : "Server communication failure", isClosed : true},
+				{ name : "User authentication is wrong", isClosed : false},
 			];
 			
 			$scope.addNew = function(bugName){
 				$scope.bugs.push(bugName);
+			};
+
+			$scope.toggleBug = function(bug){
+				bug.isClosed = !bug.isClosed;
 			};
 		})
 	</script>
@@ -70,7 +74,9 @@
 			<input type="button" value="Add Bug" ng-click="addNew(newBug)">
 			<input type="button" value="Remove Closed">
 			<ol class="bugList">
-				<li ng-repeat="bug in bugs track by $index"><span class="bugname">{{bug}}</span></li>
+				<li ng-repeat="bug in bugs track by $index">
+					<span class="bugname" ng-click="toggleBug(bug)" ng-class="{closed : bug.isClosed}">{{bug}}</span>
+				</li>
 			</ol>
 		</section>
 	</div>
