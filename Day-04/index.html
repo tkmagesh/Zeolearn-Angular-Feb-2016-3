@@ -11,7 +11,7 @@
 		1. List the bugs - done
 		2. Add a new bug - done
 		3. Togggle the 'closed' status of a bug - done
-		4. Remove closed bugs
+		4. Remove closed bugs - done
 		5. Display Statistics
 		6. Search for bugs
 		7. Sort the bugs
@@ -41,6 +41,12 @@
 			$scope.toggleBug = function(bug){
 				bug.isClosed = !bug.isClosed;
 			};
+
+			$scope.removeClosed = function(){
+				for(var i=$scope.bugs.length-1; i>=0 ; i--)
+					if ($scope.bugs[i].isClosed)
+						$scope.bugs.splice(i,1);
+			}
 		})
 	</script>
 	
@@ -72,7 +78,7 @@
 			<input type="text" ng-model="newBug" >
 			
 			<input type="button" value="Add Bug" ng-click="addNew(newBug)">
-			<input type="button" value="Remove Closed">
+			<input type="button" value="Remove Closed" ng-click="removeClosed()">
 			<ol class="bugList">
 				<li ng-repeat="bug in bugs track by $index">
 					<span class="bugname" ng-click="toggleBug(bug)" ng-class="{closed : bug.isClosed}">{{bug}}</span>
