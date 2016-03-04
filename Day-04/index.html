@@ -12,7 +12,7 @@
 		2. Add a new bug - done
 		3. Togggle the 'closed' status of a bug - done
 		4. Remove closed bugs - done
-		5. Display Statistics
+		5. Display Statistics - done
 		6. Search for bugs
 		7. Sort the bugs
 		8. Persist the bugs in the localStorage
@@ -46,7 +46,27 @@
 				for(var i=$scope.bugs.length-1; i>=0 ; i--)
 					if ($scope.bugs[i].isClosed)
 						$scope.bugs.splice(i,1);
-			}
+			};
+
+			$scope.getClosedCount = function(){
+				/*var result = 0;
+				$scope.bugs.forEach(function(bug){
+					if (bug.isClosed) ++result;
+				});
+				return result;*/
+
+				/*return $scope.bugs.filter(function(bug){
+					return bug.isClosed;
+				}).length;*/
+
+				return $scope.bugs.reduce(function(result, bug){
+					
+					var returnValue = bug.isClosed ? result + 1 : result;
+					console.log(arguments, 'return value -> ', returnValue);
+					return returnValue;
+
+				},0);
+			};
 		})
 	</script>
 	
@@ -56,7 +76,7 @@
 	<hr>
 	<div class="content" ng-controller="bugsController">
 		<section class="stats">
-			<span class="closed">2</span>
+			<span class="closed">{{getClosedCount()}}</span>
 			<span> / </span>
 			<!-- <span ng-bind="bugs.length">5</span> -->
 			<span>{{bugs.length}}</span>
