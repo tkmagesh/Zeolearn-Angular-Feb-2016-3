@@ -27,19 +27,29 @@
 			
 			console.log('bugTrackerApp initialized');
 		});
-		bugTrackerApp.controller("bugsController", function($scope){
+		bugTrackerApp.value('Bug', function(defaults){
+			this.name = defaults.name || '';
+			this.isClosed = defaults.isClosed || false;
+			this.toggle = function(){
+				this.isClosed = !this.isClosed;
+			}
+		});
+		
+		bugTrackerApp.controller("bugsController", function($scope, Bug){
+
 			$scope.bugs = [
-				{ name : "Validation messages are not displayed", isClosed : false},
-				{ name : "Server communication failure", isClosed : true},
-				{ name : "User authentication is wrong", isClosed : false},
+				new Bug({ name : "Validation messages are not displayed", isClosed : false}),
+				new Bug({ name : "Server communication failure", isClosed : true}),
+				new Bug({ name : "User authentication is wrong", isClosed : false}),
 			];
 			
 			$scope.addNew = function(bugName){
-				$scope.bugs.push(bugName);
+				var newBug = new Bug({name : bugName});
+				$scope.bugs.push(newBug);
 			};
 
 			$scope.toggleBug = function(bug){
-				bug.isClosed = !bug.isClosed;
+				bug.toggle();
 			};
 
 			$scope.removeClosed = function(){
@@ -60,11 +70,7 @@
 				}).length;*/
 
 				return $scope.bugs.reduce(function(result, bug){
-					
-					var returnValue = bug.isClosed ? result + 1 : result;
-					console.log(arguments, 'return value -> ', returnValue);
-					return returnValue;
-
+					return bug.isClosed ? result + 1 : result;
 				},0);
 			};
 		})
