@@ -13,7 +13,7 @@
 		3. Togggle the 'closed' status of a bug - done
 		4. Remove closed bugs - done
 		5. Display Statistics - done
-		6. Search for bugs
+		6. Search for bugs - done
 		7. Sort the bugs
 		8. Persist the bugs in the localStorage
 		9. Display 'createdAt' attribute for the bugs
@@ -35,15 +35,31 @@
 			}
 		});*/
 
-		function Bug(defaults){
-			this.name = defaults.name || '';
-			this.isClosed = defaults.isClosed || false;
-		}
-		Bug.prototype.toggle = function(){
-			this.isClosed = !this.isClosed;
-		}
+		/*
+		Value - Entity construction involves ONLY ONE STEP
+			  - Entity doesn't require any dependencies
+
+		Factory - Entity construction involes complex steps
+				- Entity DEPENDS on other dependencies
+		*/
+
+		bugTrackerApp.value('defaultBugName', '[Default Bug]')
+
+		bugTrackerApp.factory('Bug', function(defaultBugName){
+			function Bug(defaults){
+				this.name = defaults.name || defaultBugName;
+				this.isClosed = defaults.isClosed || false;
+			}
+			Bug.prototype.toggle = function(){
+				this.isClosed = !this.isClosed;
+			}
+			return Bug;
+		});
+
 		
-		bugTrackerApp.controller("bugsController", function($scope){
+		
+		
+		bugTrackerApp.controller("bugsController", function($scope, Bug){
 
 			$scope.bugs = [
 				new Bug({ name : "Validation messages are not displayed", isClosed : false}),
@@ -67,16 +83,6 @@
 			};
 
 			$scope.getClosedCount = function(){
-				/*var result = 0;
-				$scope.bugs.forEach(function(bug){
-					if (bug.isClosed) ++result;
-				});
-				return result;*/
-
-				/*return $scope.bugs.filter(function(bug){
-					return bug.isClosed;
-				}).length;*/
-
 				return $scope.bugs.reduce(function(result, bug){
 					return bug.isClosed ? result + 1 : result;
 				},0);
@@ -97,9 +103,10 @@
 		</section>
 		<section class="search">
 			<label for="">Search :</label>
-			<input type="text" name="" id="">
+			<input type="text" ng-model="searchBug.name">
 			<label for="">Is Closed ?</label>
-			<input type="checkbox" name="" id="">
+			<input type="checkbox" ng-model="searchBug.isClosed">
+			<input type="button" value="Show All" ng-click="searchBug.isClosed = undefined">
 		</section>
 		<section class="sort">
 			<label for="">Order By:</label>
@@ -114,7 +121,7 @@
 			<input type="button" value="Add Bug" ng-click="addNew(newBug)">
 			<input type="button" value="Remove Closed" ng-click="removeClosed()">
 			<ol class="bugList">
-				<li ng-repeat="bug in bugs track by $index">
+				<li ng-repeat="bug in (bugs | filter:searchBug)">
 					<span class="bugname" ng-click="toggleBug(bug)" ng-class="{closed : bug.isClosed}">{{bug}}</span>
 				</li>
 			</ol>
