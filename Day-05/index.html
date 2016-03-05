@@ -82,12 +82,25 @@
 						$scope.bugs.splice(i,1);
 			};
 
-			$scope.getClosedCount = function(){
-				return $scope.bugs.reduce(function(result, bug){
+			
+		})
+
+		bugTrackerApp.filter('toClosedCount' , function(){
+			return function(data){
+				return data.reduce(function(result, bug){
 					return bug.isClosed ? result + 1 : result;
 				},0);
+			}
+		});
+		bugTrackerApp.value('defaultTrimLength', 20);
+
+		bugTrackerApp.filter('trimText', function(defaultTrimLength){ 
+			/*factory function returning the filter function*/
+			return function(bug, trimLength){
+				trimLength = trimLength || defaultTrimLength;
+				return bug.length > trimLength ? bug.substr(0,trimLength) + '...' : bug;
 			};
-		})
+		});
 	</script>
 	
 </head>
@@ -96,7 +109,7 @@
 	<hr>
 	<div class="content" ng-controller="bugsController">
 		<section class="stats">
-			<span class="closed">{{getClosedCount()}}</span>
+			<span class="closed">{{ bugs | toClosedCount }}</span>
 			<span> / </span>
 			<!-- <span ng-bind="bugs.length">5</span> -->
 			<span>{{bugs.length}}</span>
@@ -122,7 +135,7 @@
 			<input type="button" value="Remove Closed" ng-click="removeClosed()">
 			<ol class="bugList">
 				<li ng-repeat="bug in (bugs | filter:searchBug | orderBy:sortBugAttr:sortBugOrder)">
-					<span class="bugname" ng-click="toggleBug(bug)" ng-class="{closed : bug.isClosed}">{{bug}}</span>
+					<span class="bugname" ng-click="toggleBug(bug)" ng-class="{closed : bug.isClosed}">{{bug.name | trimText:30}}</span>
 				</li>
 			</ol>
 		</section>
