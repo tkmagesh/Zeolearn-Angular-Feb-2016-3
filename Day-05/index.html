@@ -15,10 +15,24 @@
 		5. Display Statistics - done
 		6. Search for bugs - done
 		7. Sort the bugs - done
-		8. Persist the bugs in the localStorage
+		8. Persist the bugs in the localStorage - done
 		9. Display 'createdAt' attribute for the bugs
 		10. Persist the bugs in the server
 		11. Categorize the bugs
+
+		HTML5 (Browser - window.localStorage)
+			key/value store
+			key and value should be strings
+			Use angular.toJSON() and angular.fromJSON() for serialization and deserialization respectively
+			Same Origin Policy
+			APIs
+				- setItem(key, value)
+				- getItem(key)  // => value
+				- removeItem(key)
+				- key(index) // => key @ index
+				- clear()
+				- length // => # of items in storage
+
 		*/
 	</script>
 	<script>
@@ -47,6 +61,7 @@
 
 		bugTrackerApp.factory('Bug', function(defaultBugName){
 			function Bug(defaults){
+				this.id = defaults.id || 0;
 				this.name = defaults.name || defaultBugName;
 				this.isClosed = defaults.isClosed || false;
 			}
@@ -56,30 +71,62 @@
 			return Bug;
 		});
 
-		
-		
-		
-		bugTrackerApp.controller("bugsController", function($scope, Bug){
+		bugTrackerApp.factory('bugStorage', function(Bug){
+			var storage = window.localStorage;
+			var maxBugId = 0;
 
-			$scope.bugs = [
-				new Bug({ name : "Validation messages are not displayed", isClosed : false}),
-				new Bug({ name : "Server communication failure", isClosed : true}),
-				new Bug({ name : "User authentication is wrong", isClosed : false}),
-			];
-			
+			function getAllBugs(){
+				var result = [];
+				for(var i=0; i<storage.length; i++){
+					var key = storage.key(i);
+					var data = storage.getItem(key);
+					var bugData = angular.fromJson(data);
+					var bug = new Bug(bugData);
+					result.push(bug);
+					maxBugId = bug.id > maxBugId ? bug.id : maxBugId;
+				}
+				return result;
+			}
+			function addBug(bugName){
+				var newBug = new Bug({id : ++maxBugId, name : bugName});
+				return saveBug(newBug);
+			}
+			function saveBug(bug){
+				storage.setItem(bug.id, angular.toJson(bug));
+				return bug;
+			}
+
+			function removeBug(bug){
+				storage.removeItem(bug.id);
+			}
+
+			return {
+				getAll : getAllBugs,
+				add : addBug,
+				save : saveBug,
+				remove : removeBug
+			}
+		});
+
+		bugTrackerApp.controller("bugsController", function($scope, bugStorage){
+			$scope.bugs = bugStorage.getAll();
+
 			$scope.addNew = function(bugName){
-				var newBug = new Bug({name : bugName});
+				var newBug = bugStorage.add(bugName);
 				$scope.bugs.push(newBug);
 			};
 
 			$scope.toggleBug = function(bug){
 				bug.toggle();
+				bugStorage.save(bug)
 			};
 
 			$scope.removeClosed = function(){
 				for(var i=$scope.bugs.length-1; i>=0 ; i--)
-					if ($scope.bugs[i].isClosed)
+					if ($scope.bugs[i].isClosed){
+						bugStorage.remove($scope.bugs[i]);
 						$scope.bugs.splice(i,1);
+					}
 			};
 
 			
@@ -96,9 +143,9 @@
 
 		bugTrackerApp.filter('trimText', function(defaultTrimLength){ 
 			/*factory function returning the filter function*/
-			return function(bug, trimLength){
+			return function(text, trimLength){
 				trimLength = trimLength || defaultTrimLength;
-				return bug.length > trimLength ? bug.substr(0,trimLength) + '...' : bug;
+				return text.length > trimLength ? text.substr(0,trimLength) + '...' : text;
 			};
 		});
 	</script>
