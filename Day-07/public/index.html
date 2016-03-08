@@ -86,13 +86,28 @@
 				$http.put("http://localhost:3000/bugs/" + bug.id, bug);
 			};
 			this.removeClosed = function(){
-				for(var i=this.bugs.length-1; i>=0 ; i--)
+				for(var i=this.bugs.length-1; i>=0 ; i--){
 					if (this.bugs[i].isClosed){
-						$http.delete("http://localhost:3000/bugs/" + this.bugs[i].id);
-						this.bugs.splice(i,1);
+						var promise = $http.delete("http://localhost:3000/bugs/" + this.bugs[i].id);
+						/*promise.then((function(bug){
+							return function(response){
+								self.bugs = self.bugs.filter(function(b){
+									return b.id !== bug.id
+								});
+							}
+						})(this.bugs[i]));*/
+
+						promise.then(function(response){
+							var bug = this;
+							self.bugs = self.bugs.filter(function(b){
+								return b.id !== bug.id;
+							});
+						}.bind(self.bugs[i]));
+					
 					}
+				}
 		
-			}
+			};
 		});
 
 		bugTrackerApp.controller("bugsController", function($scope, bugsCollection){
