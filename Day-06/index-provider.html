@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Provider Demo</title>
+	<script src="angular.js"></script>
+	<script>
+		var testApp = angular.module('testApp', []);
+
+		testApp.config(function(greeterProvider, dummyProvider){
+			console.log('app in config phase');
+			console.log(greeterProvider);
+			console.log('dummyProvider ->', dummyProvider);
+			greeterProvider.setMessage('Have a good day!');
+		
+		});
+
+		testApp.run(function(greeter){     
+			console.log('app in init phase');
+			console.log(greeter);
+			greeter.name = 'Magesh';     
+			greeter.greet();
+			console.log(greeter.greetMsg); 
+		});
+
+		testApp.factory('dummy', function(){
+			return {
+				name : 'dummy'
+			};
+		});
+
+		testApp.provider('greeter', function(){
+			var _msg = 'Have a nice day!';
+			return {
+				setMessage : function(msg){
+					_msg = msg;
+				},
+				$get : function(){
+				
+					return {
+						name : '',
+						greetMsg : '',
+						greet : function(){
+							this.greetMsg =  'Hi ' + this.name + ', ' + _msg;
+						}
+					}
+				}
+			};
+		});
+
+		
+
+	</script>
+</head>
+<body ng-app="testApp">
+	
+</body>
+</html>
