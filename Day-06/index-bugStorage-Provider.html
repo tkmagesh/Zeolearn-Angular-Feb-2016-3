@@ -57,8 +57,9 @@
 			return Bug;
 		});
 
-		bugTrackerApp.provider('bugStorage', function(){
-			var _storageOption = 'localStorage';
+		bugTrackerApp.constant('defaultStorageOption', 'localStorage');
+		bugTrackerApp.provider('bugStorage', function(defaultStorageOption){
+			var _storageOption = defaultStorageOption;
 
 			return {
 				setStorageOption : function(option){
