@@ -1,0 +1,22 @@
+{
+  "bugs": [
+    {
+      "id": 5,
+      "name": "Data validation failure",
+      "isClosed": false,
+      "createdAt": "2016-01-28T18:50:56.725Z"
+    },
+    {
+      "id": 6,
+      "name": "User actions not registered",
+      "isClosed": false,
+      "createdAt": "2016-01-28T18:50:59.386Z"
+    },
+    {
+      "id": 7,
+      "name": "Long delay in creating new bugs",
+      "isClosed": false,
+      "createdAt": "2016-03-08T16:44:40.875Z"
+    }
+  ]
+}

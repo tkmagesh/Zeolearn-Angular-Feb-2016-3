@@ -54,9 +54,40 @@ var ops = (function(){
 
 	})();
 
+	function addAsyncPromise(x,y){
+		console.log('[Service Provider] - add triggered for ', x , ' and ', y);
+
+		var promise = new Promise(function(resolveFn, rejectFn){
+
+			setTimeout(function(){
+				var result = x + y;
+				console.log('[Service Provider] - returning result');
+				resolveFn(result);
+			},3000);
+		});
+		return promise;
+	}
+
+	function addAsyncDeferredPromise(x,y){
+		console.log('[Service Provider] - add triggered for ', x , ' and ', y);
+
+		var deferred = Promise.defer();
+
+		setTimeout(function(){
+			var result = x + y;
+			console.log('[Service Provider] - returning result');
+			deferred.resolve(result);
+		},3000);
+
+		return deferred.promise;
+	}
+
+
 	return {
 		addSyncClient : addSyncClient,
 		addAsyncClient : addAsyncClient,
-		addAsyncEvents : addAsyncEvents
+		addAsyncEvents : addAsyncEvents,
+		addAsyncPromise : addAsyncPromise,
+		addAsyncDeferredPromise : addAsyncDeferredPromise
 	}	
 })()
