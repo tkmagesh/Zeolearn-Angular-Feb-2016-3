@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Routing Demo</title>
+	<script src="angular.js"></script>
+	<script src="angular-route.js"></script>
+	<script>
+		var myApp = angular.module("myApp", ["ngRoute"]);
+
+		myApp.config(function($routeProvider){
+			$routeProvider
+				.when("/products", {
+					/*template : "<h2>Products</h2>"*/
+					templateUrl : 'templates/productsTemplate.html',
+					controller : 'productsController'
+				})
+				.when("/products/:id", {
+					templateUrl : 'templates/productInfoTemplate.html',
+					controller : 'productInfoController'
+				})
+				.when("/customers", {
+					/*template : "<h2>Customers</h2>"*/
+					templateUrl : 'templates/customersTemplate.html'
+				})
+				.otherwise({
+					redirectTo : "/products"
+				});
+		});
+
+		myApp.service("productsService", function(){
+			this.getAll = function(){
+				return [
+					{id : 1, name : "Pen", cost : 5, units : 100, desc : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid cupiditate, inventore, dolorem est dignissimos aut repellat quibusdam maxime sit quaerat. Dignissimos incidunt laborum numquam illo reiciendis sapiente officiis voluptatum vel!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo dolor delectus, commodi tenetur, nostrum odio exercitationem nulla eum facilis numquam culpa, distinctio accusantium esse! Vitae incidunt deserunt voluptatem reprehenderit corporis?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis delectus doloremque perferendis magni est in obcaecati quam, vel debitis dolore a odio ipsam velit sit nihil earum. Recusandae, perspiciatis, quae?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi debitis suscipit, beatae dolore perferendis architecto cumque cum molestias asperiores maiores temporibus eos, est explicabo perspiciatis officia natus laboriosam obcaecati soluta."},
+					{id : 2, name : "Hen", cost : 100, units : 20, desc : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid cupiditate, inventore, dolorem est dignissimos aut repellat quibusdam maxime sit quaerat. Dignissimos incidunt laborum numquam illo reiciendis sapiente officiis voluptatum vel!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo dolor delectus, commodi tenetur, nostrum odio exercitationem nulla eum facilis numquam culpa, distinctio accusantium esse! Vitae incidunt deserunt voluptatem reprehenderit corporis?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis delectus doloremque perferendis magni est in obcaecati quam, vel debitis dolore a odio ipsam velit sit nihil earum. Recusandae, perspiciatis, quae?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi debitis suscipit, beatae dolore perferendis architecto cumque cum molestias asperiores maiores temporibus eos, est explicabo perspiciatis officia natus laboriosam obcaecati soluta."},
+					{id : 3, name : "Den", cost : 500, units : 5, desc : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid cupiditate, inventore, dolorem est dignissimos aut repellat quibusdam maxime sit quaerat. Dignissimos incidunt laborum numquam illo reiciendis sapiente officiis voluptatum vel!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo dolor delectus, commodi tenetur, nostrum odio exercitationem nulla eum facilis numquam culpa, distinctio accusantium esse! Vitae incidunt deserunt voluptatem reprehenderit corporis?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis delectus doloremque perferendis magni est in obcaecati quam, vel debitis dolore a odio ipsam velit sit nihil earum. Recusandae, perspiciatis, quae?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi debitis suscipit, beatae dolore perferendis architecto cumque cum molestias asperiores maiores temporibus eos, est explicabo perspiciatis officia natus laboriosam obcaecati soluta."},
+					{id : 4, name : "Ten", cost : 10, units : 10, desc : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid cupiditate, inventore, dolorem est dignissimos aut repellat quibusdam maxime sit quaerat. Dignissimos incidunt laborum numquam illo reiciendis sapiente officiis voluptatum vel!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo dolor delectus, commodi tenetur, nostrum odio exercitationem nulla eum facilis numquam culpa, distinctio accusantium esse! Vitae incidunt deserunt voluptatem reprehenderit corporis?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis delectus doloremque perferendis magni est in obcaecati quam, vel debitis dolore a odio ipsam velit sit nihil earum. Recusandae, perspiciatis, quae?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi debitis suscipit, beatae dolore perferendis architecto cumque cum molestias asperiores maiores temporibus eos, est explicabo perspiciatis officia natus laboriosam obcaecati soluta."}
+				]
+			};
+		});
+
+		myApp.controller("productsController", function($scope, productsService){
+			$scope.products = productsService.getAll();
+		});
+
+		myApp.controller("productInfoController", function($scope, productsService, $routeParams){
+			var productId = parseInt($routeParams.id, 10);
+			$scope.product= productsService.getAll().filter(function(product){
+				return product.id === productId;
+			})[0];
+		});
+	</script>
+</head>
+<body ng-app="myApp">
+	<h1>MyApp.com</h1>
+	<div>
+		<span><a href="#/products">Products</a></span>
+		<span><a href="#/customers">Customers</a></span>
+	</div>
+	<hr>
+	<div ng-view></div>
+</body>
+</html>
