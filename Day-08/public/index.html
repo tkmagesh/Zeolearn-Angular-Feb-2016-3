@@ -60,28 +60,39 @@
 		/*Create a service 'bugService' that takes the responsibility of server communication */
 		//Use $q service
 
+		bugTrackerApp.service("bugService", function($http, Bug){
+			this.getAll = function(){
+				return $http.get("http://localhost:3000/bugs")
+					.then(function(response){
+						return response.data.map(function(bugData){
+							return new Bug(bugData);
+						})
+					})
+			};
+			this.addNew = function(bugName){
+				var newBug = new Bug({name : bugName});
+				return $http
+					.post('http://localhost:3000/bugs', newBug)
+					.then(function(response){
+						return new Bug(response.data);	
+					});
+			};
+		})
 		
 
-		bugTrackerApp.service('bugsCollection', function ($http, Bug){
+		bugTrackerApp.service('bugsCollection', function ($http, Bug, bugService){
 			
 			this.bugs = [];
 			var self = this;
-			var promise = $http.get('http://localhost:3000/bugs');
-			promise.then(function(response){
-				self.bugs = response.data.map(function(bugData){
-					return new Bug(bugData);
-				});
+			bugService.getAll().then(function(bugs){
+				self.bugs = bugs;
 			});
 
 			this.addNew = function(bugName){
-				//var newBug = bugStorage.add(bugName);
-				var newBug = new Bug({name : bugName});
-				var promise = $http.post('http://localhost:3000/bugs', newBug);
-				promise.then(function(response){
-					self.bugs.push(new Bug(response.data));	
+				bugService.addNew(bugName).then(function(newBug){
+					self.bugs.push(newBug);
 				});
-				
-			}
+			};
 
 			this.toggleBug = function(bug){
 				bug.toggle();

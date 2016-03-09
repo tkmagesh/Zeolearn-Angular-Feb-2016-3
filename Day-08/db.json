@@ -1,0 +1,16 @@
+{
+  "bugs": [
+    {
+      "id": 6,
+      "name": "User actions not registered",
+      "isClosed": false,
+      "createdAt": "2016-01-28T18:50:59.386Z"
+    },
+    {
+      "id": 7,
+      "name": "Juz another bug",
+      "isClosed": true,
+      "createdAt": "2016-03-09T15:31:23.140Z"
+    }
+  ]
+}
