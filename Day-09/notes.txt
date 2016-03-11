@@ -1,0 +1,27 @@
+
+package.json
+	A metadata information about the application
+	name, version, author, repository, liscence, dependencies ( dev & runtime ), scripts
+	npm init 
+
+
+node modules
+=============
+
+jasmine (mocha, qunit)
+	- bdd framework
+	- apis for organizing test code (describe, it)
+	- apis for asserting (expect)
+	- apis for mocking dependences (spy)
+	- typeof of asserting (matchers)
+
+Karma 
+	- test runner
+	- configure to run the tests across browsers
+
+Protractor
+	- An extension to selenium web driver
+
+Bower
+	- dependency management tool for client-side dependencies
+
